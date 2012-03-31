@@ -1,0 +1,9 @@
+{ "name" : "civis"
+, "version" : "1.0.0"
+, "dependencies" : {
+                    "redis" : "0.7.1", 
+                    "socket.io" : "0.8.7",
+                    "redis-url": "0.0.1" 
+  }, 
+  "engines": {"node": "0.6.6", "npm": "1.1.4"}
+}

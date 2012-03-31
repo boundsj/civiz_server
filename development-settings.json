@@ -1,0 +1,4 @@
+{
+  "environment": "Development",
+  "redis_url": "redis://localhost:6379"
+}

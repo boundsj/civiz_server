@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="utf-8">
+   <title>tweet stream 2 browser'</title>
+	<script src="http://rebounds-dev.s3-website-us-east-1.amazonaws.com/rebounds-homepage/js/jquery-1.6.2.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script> 
+        <link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.css" />
+        <!--[if lte IE 8]>
+           <link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.ie.css" />
+        <![endif]-->
+        <script src="http://code.leafletjs.com/leaflet-0.3.1/leaflet.js"></script>
+	<style type="text/css">
+		body {
+			font-family:"Sans-serif";
+			background-color: #000;
+			color: #fff;
+		}
+		p {
+			font-size: 24px;
+		}
+                #title {
+                       font-size: 40px;
+                       margin-bottom: 20px;
+                }
+                #map {
+                       margin-bottom: 50px;
+                }
+                #popup {
+                       font-size: 18px;
+                       color: #000;
+                }
+	</style>
+ </head>
+ <body>   
+   <script>
+     $(document).ready(function(){
+            //var port = process.env.PORT || 3000;
+	    //var socketUrl = 'http://127.0.0.1:' + port.toString(); 
+            //console.log(socketUrl);
+	    //var socket = io.connect('http://127.0.0.1:5100'); 
+	    var socket = io.connect(window.location.hostname); 
+		socket.on('message', function (data) {			
+                        $('#tweets').text("");
+			console.log(data);
+                        var myObject = JSON.parse(data);
+			$('#tweets').fadeOut('fast', function() {
+			    $('#tweets').fadeIn('fast', function() {
+				$('#tweets').append
+                                            ( 
+                                              "@" +
+                                              myObject["who"]["screen_name"] +
+                                              " says: " + 
+                                              myObject["what"]["text"] +
+                                              "</br>" +
+                                              " location: " + 
+                                              myObject["where"]["location"] +
+                                              "</br>"
+                                            );
+				});
+		  	});			
+                        var lat = myObject["where"]["location"][0]
+                        var lon = myObject["where"]["location"][1]
+                        var markerLocation = new L.LatLng(lat, lon);
+                        var marker = new L.Marker
+                                             (
+                                                 markerLocation, 
+                                                 {color: "#FFFF00", fillOpacity: 1.0}
+                                             );
+                        //marker.setRadius(5);
+                        marker.on('click', function(e) {
+                           var popupContent = '<p id="popup">' + myObject["what"]["text"]  + '</p>'
+                           marker.bindPopup(popupContent).openPopup();
+                        });
+                        map.addLayer(marker);
+		});
+            
+            var map = new L.Map('map');
+            map.on('zoomend', function(e) {
+                console.log(map.getZoom());
+            });
+            var cloudmade = new L.TileLayer('http://{s}.tile.cloudmade.com/6200c872007d4cbbaab22fddf75c7a03/31408/256/{z}/{x}/{y}.png', {
+                attribution: '',
+                maxZoom: 18
+            });
+            var chicago = new L.LatLng(41.90, -87.65); // geographical point (longitude and latitude)
+            map.setView(chicago, 10).addLayer(cloudmade);
+     });
+   </script>
+   <p id="title">WATCH THE CHICAGO TWEETS</div>
+   <div id="map" style="height: 350px"></div>
+   <p id="tweets"></p>
+ </body>
+ </html>
