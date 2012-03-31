@@ -3,6 +3,9 @@ var http = require('http'),
 
 var port = process.env.PORT || 3000;
 
+console.log("process.env.PATH is " + process.env.PATH);
+console.log("process.env.REDISTOGO_URL is " + process.env.REDISTOGO_URL);
+
 var server = http.createServer(function (req, res) { 
     fs.readFile('index.html', function(error, data) { 
       res.writeHead(200, { 'Content-Type': 'text/html' }); 
