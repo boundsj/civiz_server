@@ -15,31 +15,31 @@ function init(redisUrl) {
 
 	console.log("attempting connetion to redis with " + redisUrl);
 
-    var url = require('url');
-    var parsedUrl  = url.parse(redisUrl);
-    var parsedAuth = (parsedUrl.auth || '').split(':');
-    console.log('parsed url host: ' + parsedUrl.host);
-    console.log('parsed url port: ' + parsedUrl.port);
-    console.log('parsed url auth: ' + parsedAuth);
+    var password, database, url = require('url');
+    var parsed_url  = url.parse(redisUrl || process.env.REDIS_URL || 'redis://localhost:6379');
+    var parsed_auth = (parsed_url.auth || '').split(':');
+    var redis = require('redis').createClient(parsed_url.port, parsed_url.hostname);
 
-	//var redis = require('redis-url').createClient(redisUrl);
-  
-    var redis = require('redis').createClient(parsedUrl.port, parsedUrl.hostname); 
-    var redisAuth = function() { 
-        if (redisAuth) {
-            redis.auth(parsedAuth); 
-        }
+    if (password = parsed_auth[1]) {
+        redis.auth(password, function(err) {
+            if (err) throw err;
+        });
     }
 
-	//redis.addListener('connected', redisAuth);
-	//redis.addListener('reconnected', redisAuth);
-	//redisAuth();
+    /*
+    if (database = parsed_auth[0]) {
+      redis.select(database);
+      redis.on('connect', function() {
+        redis.send_anyways = true
+        redis.select(database);
+        redis.send_anyways = false;
+      });
+    }
+    */
+
+	redis.subscribe("tweets");
 
 	redis.on("message", function (channel, message) {
 		process.send(message);
 	});
-
-	redis.subscribe("tweets");
 }
-
-
