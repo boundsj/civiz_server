@@ -16,26 +16,15 @@ function init(redisUrl) {
 	console.log("attempting connetion to redis with " + redisUrl);
 
     var password, database, url = require('url');
-    var parsed_url  = url.parse(redisUrl || process.env.REDIS_URL || 'redis://localhost:6379');
-    var parsed_auth = (parsed_url.auth || '').split(':');
-    var redis = require('redis').createClient(parsed_url.port, parsed_url.hostname);
+    var parsedUrl  = url.parse(redisUrl);
+    var parsedAuth = (parsedUrl.auth || '').split(':');
+    var redis = require('redis').createClient(parsedUrl.port, parsedUrl.hostname);
 
-    if (password = parsed_auth[1]) {
+    if (password = parsedAuth[1]) {
         redis.auth(password, function(err) {
             if (err) throw err;
         });
     }
-
-    /*
-    if (database = parsed_auth[0]) {
-      redis.select(database);
-      redis.on('connect', function() {
-        redis.send_anyways = true
-        redis.select(database);
-        redis.send_anyways = false;
-      });
-    }
-    */
 
 	redis.subscribe("tweets");
 
