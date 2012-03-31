@@ -31,6 +31,7 @@ io.sockets.on('connection', function (socket) {
 
 var cp = require('child_process');
 var tweetNode = cp.fork(__dirname + '/tstream.js');
+tweetNode.send( {redisUrl: process.env.REDISTOGO_URL} );
 
 tweetNode.on('message', function(message) {
 	io.sockets.emit('message', message);
