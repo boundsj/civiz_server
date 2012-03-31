@@ -1,6 +1,8 @@
 var fs = require('fs');
 var settings = {};
 
+console.log("process.env.PATH is " + process.env.PATH);
+console.log("env.PATH is " + env.PATH);
 console.log("process.env.REDISTOGO_URL is " + process.env.REDISTOGO_URL);
 
 var redisUrl = process.env.REDISTOGO_URL;
