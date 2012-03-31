@@ -1,4 +1,4 @@
-{ "name" : "civis"
+{ "name" : "civis_server"
 , "version" : "1.0.0"
 , "dependencies" : {
                     "redis" : "0.7.1", 
