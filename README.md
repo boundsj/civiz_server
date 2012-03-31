@@ -42,6 +42,6 @@ Running Locally
 
 Deploy to Heroku
 ----------------
-heroku addons:add redistogo:nano
-heroku plugins:install git://github.com/ddollar/heroku-config.git
 heroku create YOUR_APP_NAME -s cedar
+heroku plugins:install git://github.com/ddollar/heroku-config.git
+heroku config:add `heroku config -a civiz-tractor -s | grep REDISTOGO_URL`
