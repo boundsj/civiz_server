@@ -64,7 +64,7 @@ variable for REDISTOGO to be the same in server as it is in tractor:
 Now you can push your application up to Heroku.
 
     $ git push heroku master
-    $ heroku scale worker=1
+    $ heroku scale web=1
 
 Finally, we can make sure the application is up and running.
 
